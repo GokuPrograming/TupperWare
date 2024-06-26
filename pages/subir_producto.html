@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registrar Producto</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.5/dist/sweetalert2.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.5/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+      body {
+        background: #f0f0f0;
+      }
+      h1 {
+        color: #99582a;
+      }
+      form {
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .button {
+        background-color: #99582a;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .button:hover {
+        background-color: green;
+      }
+      h2 {
+        margin-left: 55px;
+      }
+      textarea {
+        margin-top: 10px;
+        margin-left: 50px;
+        width: 500px;
+        height: 100px;
+        background: rgba(0, 0, 0, 0.07);
+        border-radius: 6px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12) inset;
+        color: #555555;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 1em;
+        line-height: 1.4em;
+        padding: 5px 8px;
+        transition: background-color 0.2s ease;
+      }
+      textarea:focus {
+        background: #ffffff;
+        outline-width: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="mostrarBarra"></div>
+    <div class="container">
+      <h1>Registrar Producto</h1>
+      <form action="../controller/subir.php?opc=12" method="post" enctype="multipart/form-data" id="forming">
+        <div class="form-group">
+          <label for="producto">Producto:</label>
+          <input type="text" class="form-control" id="producto" name="producto" required />
+        </div>
+        <div class="form-group">
+          <label for="stock">Stock:</label>
+          <input type="number" class="form-control" id="stock" name="stock" min="0" step="0.01" required />
+        </div>
+        <div class="form-group">
+          <label for="precio">Precio:</label>
+          <input type="number" class="form-control" id="precio" name="precio" min="0" step="0.01" required />
+        </div>
+        <div class="form-group">
+          <label for="archivoImagen">Seleccionar imagen:</label>
+          <input type="file" class="form-control-file" id="archivoImagen" name="foto" accept="image/*" />
+        </div>
+        <div class="form-group">
+          <label for="archivoImagen1">Seleccionar imagen:</label>
+          <input type="file" class="form-control-file" id="archivoImagen1" name="foto2" accept="image/*" />
+        </div>
+        <div class="form-group">
+          <label for="archivoImagen2">Seleccionar imagen:</label>
+          <input type="file" class="form-control-file" id="archivoImagen2" name="foto3" accept="image/*" />
+        </div>
+        <div class="form-group">
+          <label for="descripcion">Descripcion del producto:</label>
+          <textarea name="descripcion" id="descripcion" placeholder="This is an awesome comment box" rows="5" cols="40" class="form-control"></textarea>
+        </div>
+        <input type="submit" class="button" />
+      </form>
+    </div>
+    <script>
+      $(document).ready(function () {
+        $("#forming").submit(function (e) {
+          e.preventDefault(); // Evitar que el formulario se envíe de forma convencional
+
+          // Obtener los valores del formulario
+          var producto = $("#producto").val();
+          var stock = $("#stock").val();
+          var precio = $("#precio").val();
+          var foto = $("#archivoImagen")[0].files[0];
+          var foto2 = $("#archivoImagen1")[0].files[0];
+          var foto3 = $("#archivoImagen2")[0].files[0];
+
+          // Crear un objeto FormData para enviar los datos como formulario
+          var formData = new FormData();
+          formData.append("producto", producto);
+          formData.append("stock", stock);
+          formData.append("precio", precio);
+          formData.append("foto", foto);
+          formData.append("foto2", foto2);
+          formData.append("foto3", foto3);
+          formData.append("descripcion", $("#descripcion").val());
+
+          // Realizar la solicitud AJAX
+          $.ajax({
+            url: "../controller/subir.php?opc=12",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+              Swal.fire("Éxito", response, "success");
+              $("#forming")[0].reset(); // Limpiar el formulario
+            },
+            error: function () {
+              Swal.fire("Error", "Ocurrió un error al enviar el formulario.", "error");
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
